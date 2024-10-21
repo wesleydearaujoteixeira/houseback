@@ -2,6 +2,7 @@
 import { Request, Response } from "express";
 import User from "../model/User";
 import House from "../model/House";
+import Reserve from "../model/Reserve";
 
 export default class Controller {
 
@@ -59,7 +60,6 @@ export default class Controller {
 
         const alluser = await User.find();
         return res.status(200).json({ message: 'Listando todos os usuários', users: alluser});
-
 
     }
 
@@ -184,6 +184,147 @@ export default class Controller {
     
     }
 
+    static async ListarOwnHouses (req: Request, res: Response): Promise<any> {
+        
+        const { user_id } = req.headers;
+
+       try {
+        
+        const houses = await House.find({user: user_id as string});
+        const user = await User.findById({_id: user_id});
+
+        res.status(200).json(
+            
+            { 
+                message: `O usuário com o nome ${user?.email} tem as seguintes casas:`,
+                houses
+        
+            });
+
+       } catch (error) {
+           return res.status(400).json({ message: 'Houve um erro inesperado aí', error});
+
+       }
+
+
+
+
+
+
+    }
+
+    static async FazerReservas (req: Request, res: Response): Promise<any> {
+        
+        const { house_id } = req.params;  
+        const { user_id } = req.headers;
+
+        const horaBrasilia = new Date().toLocaleString("pt-BR", {
+            timeZone: "America/Sao_Paulo",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false, // Formato 24 horas
+          });
+
+
+
+        try {
+
+          const user = await User.findById(user_id);
+          const house = await House.findById(house_id);
+
+
+          if(String(user?._id) === String(house?.user)) {
+                return res.status(401).json({ message:"Não é possível fazer reservas para casas que você é dono"});
+            
+             }
+
+            if(!house) {
+                return res.status(404).json({ message:"Casa não encontrada"});
+            }
+
+
+            if(house.status !== true) {
+                return res.status(400).json({ message:"Casa não está disponível para reservas"});
+            }
+
+            const reserva = await Reserve.create({
+                user: user_id as string,
+                house: house_id as string,
+                date: new Date(),
+                hour: horaBrasilia,
+            });
+
+            const appointment = await (await reserva.populate('house')).populate('user')
+
+            res.status(201).json({
+                message: "Reserva realizada com sucesso",
+                appointment,
+            })
+
+
+        } catch (error) {
+             return res.status(400).json({ message: 'Houve um erro inesperado aí', error});
+        }
+    
+    }
+
+    static async ListarReservas (req: Request, res: Response): Promise<any> {
+
+        try {
+
+            const { user_id } = req.headers;
+            const houses = await Reserve.find({user: user_id}).populate('house');
+
+            return res.status(200).json({
+                message: "Listando reservas do usuário",
+                houses,
+            });     
+            
+        } catch (error) {
+            return res.status(400).json({ message: 'Houve um erro', error });
+        }
+
+
+
+
+    }
+
+    static async CancelReserve (req: Request, res: Response): Promise<any> {
+        
+    
+        try {
+            
+            const { reserve_id } = req.params;
+            const { user_id } = req.headers;
+
+
+            if(user_id === undefined || user_id === "") {
+                return res.status(401).json({ message: "Token não fornecido"});
+            }
+
+
+            const cancelReserve = await Reserve.findByIdAndDelete({_id: reserve_id});
+
+            if(!cancelReserve) {
+                return res.status(404).json({ message: "Reserva não encontrada"});
+            }
+
+
+            return res.status(200).json({
+                message: "Reserva cancelada com sucesso",
+                cancelReserve,
+            })
+
+        } catch (error) {
+            return res.status(400).json({ message: 'Houve um erro', error });
+            
+        }
+
+
+
+
+    }
+
 
 }
-
