@@ -13,7 +13,7 @@ export default class VerificationService {
         const authHeaders = req.headers['authorization'];
 
         if (!authHeaders) {
-            return res.status(401).json({ error: 'Acesso negado, problemas com o token' });
+            return res.status(401).json({ error: 'Acesso negado, token não fornecido' });
         }
 
         const token = authHeaders.split(' ')[1];
