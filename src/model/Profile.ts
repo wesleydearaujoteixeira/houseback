@@ -1,11 +1,9 @@
 import { Schema, model } from "mongoose";
 
-const HouseSchema = new Schema({
+const ProfileSchema = new Schema({
     images: { type: String, required: true },
     description: { type: String, required: true},
-    price: { type: Number, required: true},
-    location: { type: String, required: true},
-    status: { type: Boolean, required: true},
+    telefone: { type: String, required: true},
     owner: {
         type: Schema.Types.ObjectId,
         ref: 'User',
@@ -13,4 +11,4 @@ const HouseSchema = new Schema({
     }
 });
 
-export default model('House', HouseSchema);
+export default model('Profile', ProfileSchema);

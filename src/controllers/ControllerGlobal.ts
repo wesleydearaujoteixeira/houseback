@@ -3,36 +3,50 @@ import { Request, Response } from "express";
 import User from "../model/User";
 import House from "../model/House";
 import Reserve from "../model/Reserve";
+import { createToken } from "../services/create-toke";
+
+import bcrypt from "bcrypt";
+import { ExtendRequest } from "../types/RequestType";
+import Profile from "../model/Profile";
+
+
 
 export default class Controller {
 
-    static async Teste (req: Request, res: Response): Promise<any> { 
+    static async Teste (req: ExtendRequest, res: Response): Promise<any> {
+            res.json({
+            message: "Ok, autenticado"
+        })
+    } 
 
-        return res.status(200).json({ message: 'Teste de API' });
 
-    }
 
-    static async Register (req: Request, res: Response): Promise<any> {
+    static async Register (req: ExtendRequest, res: Response): Promise<any> {
         
         try {
 
-            const { email } = req.body;
+            const { email, username, password } = req.body;
+
+
+            if(!email || !username || !password) {
+                return res.status(400).json({ message: 'Preencha todos os campos' });
+            }
 
 
             let user = await User.findOne({ email });
 
+
             if(!user) {
-                user  = await User.create({ email });
+                user  = await User.create({ username, email, password });
             }
 
+            const token = createToken(username);
 
-
-    
-            return res.status(201).json({ message: 'Usuário criado', user});
+            return res.status(201).json({ message: 'Usuário criado', user, token});
 
 
         } catch (error) {
-            return res.status(500).json({ message:"error", error})
+            return res.status(500).json({ message: "erro no register: ", error})
         }
      
     }
@@ -42,28 +56,49 @@ export default class Controller {
 
         try {
 
-            const { email } = req.body;
-            const user = await User.findOne({email});
+            const { email, password } = req.body;
 
 
-            return res.status(200).json({ message: 'Usuário cadastrado', info: user});
+            const user = await User.findOne({email}).select('+password');
+            
+
+            if(!user) {
+                return res.status(401).json({ message: 'Usuário não encontrado' });
+            }
+
+
+            if(typeof user?.password !== "string") {
+                return res.status(500).json({ message: "Senha incompátivel" })
+            }
+            
+            
+           
+            const passwordValid = await bcrypt.compare(password, user.password);
+
+            if(!passwordValid) {
+                return res.status(401).json({ message: 'Senha inválida' });
+            }
+
+            const token = createToken(user.username);
+
+            return res.status(200).json({ message: 'Usuário logado', info: user, token});
 
 
         } catch (error) {
-            return res.status(400).json({ message:"error", error})
+            return res.status(400).json({ message:" erro na senha aí ", error})
         }
     
     }
 
 
-    static async Listar (req: Request, res: Response): Promise<any> {
+    static async Listar (req: ExtendRequest, res: Response): Promise<any> {
 
         const alluser = await User.find();
         return res.status(200).json({ message: 'Listando todos os usuários', users: alluser});
 
     }
 
-    static async DeleteEmail (req: Request, res: Response): Promise<any> {
+    static async DeleteEmail (req: ExtendRequest, res: Response): Promise<any> {
 
         const { id } = req.params;
 
@@ -73,7 +108,7 @@ export default class Controller {
     }
 
 
-    static async CreateHouser (req: Request, res: Response): Promise<any> {
+    static async CreateHouser (req: ExtendRequest, res: Response): Promise<any> {
         
        let fileimage = req.file?.filename;
 
@@ -99,7 +134,7 @@ export default class Controller {
         
     }
     
-    static async ListarCasas (req: Request, res: Response): Promise<any> {
+    static async ListarCasas (req: ExtendRequest, res: Response): Promise<any> {
         
       try {
         const allhouses = await House.find();
@@ -112,7 +147,7 @@ export default class Controller {
 
     }
 
-    static async UpdateHouse (req: Request, res: Response): Promise<any> {
+    static async UpdateHouse (req: ExtendRequest, res: Response): Promise<any> {
         
         const { id } = req.params;
 
@@ -129,7 +164,7 @@ export default class Controller {
 
         if(user) {
 
-            if(String(user._id) !== String(home?.user)) {
+            if(String(user._id) !== String(home?.owner)) {
                 return res.status(401).json({ message:"Não pode editar uma casa que não é sua"});
             }
         }
@@ -145,7 +180,11 @@ export default class Controller {
             status: status as boolean,
         })
 
-            return res.json({message: "casa atualizada com sucesso", house});
+            return res.json(
+                {message: "casa atualizada com sucesso", 
+                house,
+            
+            });
 
        } catch (error) {
             return res.status(400).json({ message: 'Houve um erro inesperado aí', error});
@@ -164,7 +203,7 @@ export default class Controller {
     
         try {
                 
-              if(String(user?._id) !== String(home?.user)) {
+              if(String(user?._id) !== String(home?.owner)) {
                 return res.status(401).json({ message:"Não pode excluir uma casa que n te pertence"});
             }
         
@@ -234,7 +273,7 @@ export default class Controller {
           const house = await House.findById(house_id);
 
 
-          if(String(user?._id) === String(house?.user)) {
+          if(String(user?._id) === String(house?.owner)) {
                 return res.status(401).json({ message:"Não é possível fazer reservas para casas que você é dono"});
             
              }
@@ -259,7 +298,7 @@ export default class Controller {
 
             res.status(201).json({
                 message: "Reserva realizada com sucesso",
-                appointment,
+                appointment
             })
 
 
@@ -323,6 +362,31 @@ export default class Controller {
 
 
 
+
+    }
+
+    static async ProfileUser (req: Request, res: Response): Promise<any> {
+        
+        let fileimage = req.file?.filename;
+
+       const { description, telefone } = req.body;
+       const { user_id } = req.headers;
+
+       try {
+
+        const perfil = await Profile.create({
+            owner: user_id as string,
+            images: fileimage,
+            description: description as string,
+            telefone: telefone as string
+
+        })
+
+            return res.json({message: "Perfil cadastrado com sucesso", perfil});
+       } catch (error) {
+            return res.status(400).json({ message: 'Houve um erro inesperado aí', error});
+       }
+        
 
     }
 
