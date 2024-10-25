@@ -21,7 +21,7 @@ const HouseSchema = new Schema({
 
 
 HouseSchema.virtual('images_url').get( function(){
-    return `http://localhost:5000/files/${this.images}`;
+    return `https://houseback-api.onrender.com/files/${this.images}`;
 })
 
 export default model('House', HouseSchema);
