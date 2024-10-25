@@ -118,7 +118,7 @@ export default class Controller {
        try {
 
         const house = await House.create({
-            user: user_id as string,
+            owner: user_id as string,
             images: fileimage,
             description: description as string,
             price: price as number,

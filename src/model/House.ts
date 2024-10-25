@@ -11,6 +11,17 @@ const HouseSchema = new Schema({
         ref: 'User',
         required: true,
     }
+}, {
+
+    toJSON: {
+        virtuals: true
+    }
+
 });
+
+
+HouseSchema.virtual('images_url').get( function(){
+    return `http://localhost:5000/files/${this.images}`;
+})
 
 export default model('House', HouseSchema);

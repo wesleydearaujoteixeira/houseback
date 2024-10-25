@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import mainRouter from './routes/mainRouter';
 import conectDB from './database/db';
+import path from 'path';
 
 const server = express();
 
@@ -13,6 +14,11 @@ server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 server.use(cors());
 server.use(helmet());
+
+server.use(
+    '/files', 
+    express.static(path.resolve(__dirname, '..', 'uploads'))
+);
 
 server.use('/user', mainRouter);
 
