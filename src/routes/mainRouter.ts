@@ -28,7 +28,6 @@ mainRouter.get('/listarCasas', Controller.ListarCasas);
 
 mainRouter.patch('/atualizar/:id', VerificationService.getVerification, upload.single('images'), Controller.UpdateHouse);
 mainRouter.delete('/delete/:id', VerificationService.getVerification, Controller.DeleteHouse);
-mainRouter.get('/casas/minhas/:id', VerificationService.getVerification, Controller.ListarOwnHouses);
 mainRouter.post('/reservas/:house_id', VerificationService.getVerification, Controller.FazerReservas);
 mainRouter.get('/reservaslist/:id', VerificationService.getVerification ,Controller.ListarReservas);
 mainRouter.delete('/reservas/:reserve_id', VerificationService.getVerification, Controller.CancelReserve);
@@ -36,6 +35,11 @@ mainRouter.delete('/reservas/:reserve_id', VerificationService.getVerification, 
 // rota para montagem do perfil do usuário em breve;
 
 mainRouter.patch('/editarPerfil', VerificationService.getVerification, upload.single('images'), Controller.ProfileUser);
+
+
+
+
+mainRouter.get('/myhomes/:id', VerificationService.getVerification, Controller.MyHomes)
 
 
 

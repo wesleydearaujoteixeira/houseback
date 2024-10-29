@@ -260,34 +260,7 @@ export default class Controller {
     
     }
 
-    static async ListarOwnHouses (req: Request, res: Response): Promise<any> {
-        
-        const { id } = req.params;
-
-       try {
-        
-        const houses = await House.find({user: String(id)});
-        const user = await User.findById({_id: id});
-
-        res.status(200).json(
-            
-            { 
-                message: `O usuário com o nome ${user?.email} tem as seguintes casas:`,
-                houses
-        
-            });
-
-       } catch (error) {
-           return res.status(400).json({ message: 'Houve um erro inesperado aí', error});
-
-       }
-
-
-
-
-
-
-    }
+  
 
     static async FazerReservas (req: Request, res: Response): Promise<any> {
         
@@ -424,6 +397,28 @@ export default class Controller {
        }
         
 
+    }
+
+
+    static async MyHomes (req: Request, res: Response): Promise<any> {
+
+       try {
+        
+        const  { id } = req.params;
+
+        const casas = await House.find({ owner: id }).populate('house');
+
+        if(!casas) {
+            return res.status(404).json({ message: "Casas não encontradas"});
+        }
+        
+        return res.status(200).json({ message: "Listando casas do usuário", casas});
+
+       } catch (error) {
+
+        return res.status(500).json({ message:'Error in casas do usuário', error})
+        
+       }
     }
 
  
