@@ -38,7 +38,6 @@ mainRouter.patch('/editarPerfil', VerificationService.getVerification, upload.si
 
 
 
-
 mainRouter.get('/myhomes/:id', VerificationService.getVerification, Controller.MyHomes)
 
 

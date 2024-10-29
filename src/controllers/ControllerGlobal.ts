@@ -406,7 +406,7 @@ export default class Controller {
         
         const  { id } = req.params;
 
-        const casas = await House.find({ owner: id }).populate('house');
+        const casas = await House.find({ owner: String(id) });
 
         if(!casas) {
             return res.status(404).json({ message: "Casas não encontradas"});
