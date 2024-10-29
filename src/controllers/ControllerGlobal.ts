@@ -116,7 +116,7 @@ export default class Controller {
        const {id} = req.params;
        
        
-       const user = User.findOne({_id: id});
+       const user = await User.findOne({_id: id});
 
 
        if(!user) {
