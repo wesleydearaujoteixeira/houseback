@@ -14,11 +14,7 @@ server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 server.use(helmet());
 
-server.use(cors({
-    origin: 'https://useback-api.onrender.com', // Altere para o domínio do seu front-end
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'user_id'],
-  }));
+server.use(cors());
   
 
 server.use(
