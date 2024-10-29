@@ -22,7 +22,7 @@ mainRouter.delete('/:id', Controller.DeleteEmail);
 
 mainRouter.get('/testes', VerificationService.getVerification, Controller.Teste);
 
-mainRouter.post('/createHouser', VerificationService.getVerification, upload.single('images'), Controller.CreateHouser);
+mainRouter.post('/createHouser/:id', VerificationService.getVerification, upload.single('images'), Controller.CreateHouser);
 mainRouter.get('/listarCasas', Controller.ListarCasas);
 mainRouter.patch('/atualizar/:id', VerificationService.getVerification, upload.single('images'), Controller.UpdateHouse)
 mainRouter.delete('/delete/:id', VerificationService.getVerification, Controller.DeleteHouse);

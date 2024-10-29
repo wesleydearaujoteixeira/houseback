@@ -7,7 +7,6 @@ import conectDB from './database/db';
 import path from 'path';
 
 const server = express();
-
 dotenv.config();
 
 server.use(express.urlencoded({ extended: true }));

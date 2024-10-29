@@ -113,12 +113,27 @@ export default class Controller {
        let fileimage = req.file?.filename;
 
        const {description, price, location, status } = req.body;
-       const { user_id } = req.headers;
+       const {id} = req.params;
+       
+       
+       const user = User.findOne({_id: id});
+
+
+       if(!user) {
+        return res.status(404).json({
+            message: 'Usuário não encontrado'
+        });
+
+       }
+       
+       console.log(user);
+
+
 
        try {
 
         const house = await House.create({
-            owner: user_id as string,
+            owner: id as string,
             images: fileimage,
             description: description as string,
             price: price as number,
@@ -130,6 +145,9 @@ export default class Controller {
             return res.json({message: "casa cadastrada com sucesso hein", house});
        } catch (error) {
             return res.status(400).json({ message: 'Houve um erro inesperado aí', error});
+       }finally {
+        console.log(user);
+
        }
         
     }
