@@ -208,7 +208,6 @@ export default class Controller {
         }
 
 
-
         const house = await House.updateOne({_id: id}, {
             user: user_id as string,
             images: fileimage,
@@ -263,12 +262,12 @@ export default class Controller {
 
     static async ListarOwnHouses (req: Request, res: Response): Promise<any> {
         
-        const { user_id } = req.headers;
+        const { id } = req.params;
 
        try {
         
-        const houses = await House.find({user: user_id as string});
-        const user = await User.findById({_id: user_id});
+        const houses = await House.find({user: id as string});
+        const user = await User.findById({_id: id});
 
         res.status(200).json(
             
@@ -350,8 +349,8 @@ export default class Controller {
 
         try {
 
-            const { user_id } = req.headers;
-            const houses = await Reserve.find({user: user_id}).populate('house');
+            const { id } = req.params;
+            const houses = await Reserve.find({user: id}).populate('house');
 
             return res.status(200).json({
                 message: "Listando reservas do usuário",
@@ -361,7 +360,6 @@ export default class Controller {
         } catch (error) {
             return res.status(400).json({ message: 'Houve um erro', error });
         }
-
 
 
 
@@ -427,6 +425,8 @@ export default class Controller {
         
 
     }
+
+ 
 
 
 }
