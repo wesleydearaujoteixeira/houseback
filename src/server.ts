@@ -14,7 +14,7 @@ server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 server.use(helmet());
 
-server.use(cors());
+server.use(cors({ credentials: true, origin: "https://useback-api.onrender.com" }));
   
 
 server.use(
