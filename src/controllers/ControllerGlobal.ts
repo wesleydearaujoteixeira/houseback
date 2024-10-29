@@ -266,7 +266,7 @@ export default class Controller {
 
        try {
         
-        const houses = await House.find({user: id as string});
+        const houses = await House.find({user: String(id)});
         const user = await User.findById({_id: id});
 
         res.status(200).json(
