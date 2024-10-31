@@ -233,7 +233,7 @@ export default class Controller {
     static async DeleteHouse (req: Request, res: Response): Promise<any> {
         
         const { id } = req.params;
-        const { user_id } = req.headers;
+        const { user_id } = req.params;
 
         const user = await User.findById(user_id);
         const home = await House.findById(id);
