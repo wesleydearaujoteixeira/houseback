@@ -192,7 +192,7 @@ export default class Controller {
         let fileimage = req.file?.filename;
 
        const {description, price, location, status } = req.body;
-       const { user_id } = req.headers;
+       const { user_id } = req.params;
 
 
        try {
