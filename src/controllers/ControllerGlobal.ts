@@ -232,11 +232,11 @@ export default class Controller {
     
     static async DeleteHouse (req: Request, res: Response): Promise<any> {
         
-        const { id } = req.params;
+        const { id_house } = req.params;
         const { user_id } = req.params;
 
         const user = await User.findById(user_id);
-        const home = await House.findById(id);
+        const home = await House.findById(id_house);
     
         try {
                 
@@ -245,7 +245,7 @@ export default class Controller {
             }
         
 
-            const house = await House.findByIdAndDelete(id);
+            const house = await House.findByIdAndDelete(id_house);
 
             return res.status(200).json({message: "casa excluída com sucesso"});
 
