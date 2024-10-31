@@ -231,12 +231,21 @@ export default class Controller {
    
     
     static async DeleteHouse (req: Request, res: Response): Promise<any> {
-        
-        const { id_house } = req.params;
-        const { user_id } = req.params;
+    
+
+        const { id_house, user_id } = req.params;
+
 
         const user = await User.findById(user_id);
         const home = await House.findById(id_house);
+
+
+        console.log(user?._id);
+        console.log(home?._id);
+
+        if (!user_id || !id_house) {
+            return res.status(400).json({ message: "Parâmetros user_id e id_house são obrigatórios" });
+        }
     
         try {
                 
