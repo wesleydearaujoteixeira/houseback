@@ -36,8 +36,6 @@ mainRouter.delete('/reservas/:reserve_id', VerificationService.getVerification, 
 
 mainRouter.patch('/editarPerfil', VerificationService.getVerification, upload.single('images'), Controller.ProfileUser);
 
-
-
 mainRouter.get('/myhomes/:id', VerificationService.getVerification, Controller.MyHomes)
 
 

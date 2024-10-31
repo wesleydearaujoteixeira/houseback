@@ -186,19 +186,30 @@ export default class Controller {
     }
 
     static async UpdateHouse (req: ExtendRequest, res: Response): Promise<any> {
-        
-        const { id } = req.params;
+
+        const { id, user_id } = req.params;
+
 
         let fileimage = req.file?.filename;
 
        const {description, price, location, status } = req.body;
-       const { user_id } = req.params;
+
+       if(!id || !user_id) {
+            return res.status(404).json({
+                message: "Id ou user_id n encontrados"
+            })
+
+       }
 
 
        try {
 
         const user = await User.findById(user_id);
         const home = await House.findById(id);
+
+
+        console.log(" usuário " + user?._id);
+        console.log(" home " + home?.owner);
 
         if(user) {
 
@@ -209,7 +220,7 @@ export default class Controller {
 
 
         const house = await House.updateOne({_id: id}, {
-            user: user_id as string,
+            owner: user_id as string,
             images: fileimage,
             description: description as string,
             price: price as number,
