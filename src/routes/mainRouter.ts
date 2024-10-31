@@ -21,22 +21,19 @@ mainRouter.delete('/:id', Controller.DeleteEmail);
 
 
 mainRouter.get('/testes', VerificationService.getVerification, Controller.Teste);
-
 mainRouter.post('/createHouser/:id', VerificationService.getVerification, upload.single('images'), Controller.CreateHouser);
 mainRouter.get('/listarCasas', Controller.ListarCasas);
-
-
 mainRouter.patch('/atualizar/:id/:user_id', VerificationService.getVerification, upload.single('images'), Controller.UpdateHouse);
 mainRouter.delete('/delete/:id_house/:user_id', VerificationService.getVerification, Controller.DeleteHouse);
-mainRouter.post('/reservas/:house_id', VerificationService.getVerification, Controller.FazerReservas);
+
+
+
+
+mainRouter.post('/reservas/:house_id/:user_id', VerificationService.getVerification, Controller.FazerReservas);
 mainRouter.get('/reservaslist/:id', VerificationService.getVerification ,Controller.ListarReservas);
 mainRouter.delete('/reservas/:reserve_id', VerificationService.getVerification, Controller.CancelReserve);
-
-// rota para montagem do perfil do usuário em breve;
-
 mainRouter.patch('/editarPerfil', VerificationService.getVerification, upload.single('images'), Controller.ProfileUser);
-
-mainRouter.get('/myhomes/:id', VerificationService.getVerification, Controller.MyHomes)
+mainRouter.get('/myhomes/:id', VerificationService.getVerification, Controller.MyHomes);
 
 
 

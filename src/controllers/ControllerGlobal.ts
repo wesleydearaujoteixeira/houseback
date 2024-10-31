@@ -285,7 +285,7 @@ export default class Controller {
     static async FazerReservas (req: Request, res: Response): Promise<any> {
         
         const { house_id } = req.params;  
-        const { user_id } = req.headers;
+        const { user_id } = req.params; 
 
         const horaBrasilia = new Date().toLocaleString("pt-BR", {
             timeZone: "America/Sao_Paulo",
