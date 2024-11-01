@@ -5,6 +5,7 @@ const HouseSchema = new Schema({
     description: { type: String, required: true},
     price: { type: Number, required: true},
     location: { type: String, required: true},
+    telefone: { type: String, required: true},
     status: { type: Boolean, required: true},
     owner: {
         type: Schema.Types.ObjectId,

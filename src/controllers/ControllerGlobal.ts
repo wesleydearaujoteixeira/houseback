@@ -8,6 +8,7 @@ import { createToken } from "../services/create-toke";
 import bcrypt from "bcrypt";
 import { ExtendRequest } from "../types/RequestType";
 import Profile from "../model/Profile";
+import { RemoveSomethingOntheString } from "../utils/RemoveStringAspas";
 
 
 
@@ -282,65 +283,60 @@ export default class Controller {
 
   
 
-    static async FazerReservas (req: Request, res: Response): Promise<any> {
-        
-        const { house_id, user_id } = req.params;  
-
+    static async FazerReservas(req: Request, res: Response): Promise<any> {
+        const { house_id, user_id } = req.params;
+    
+        console.log(house_id);
+        console.log(user_id);
+    
         const horaBrasilia = new Date().toLocaleString("pt-BR", {
             timeZone: "America/Sao_Paulo",
             hour: "2-digit",
             minute: "2-digit",
             second: "2-digit",
             hour12: false, // Formato 24 horas
-          });
-
-
-
+        });
+    
         try {
-
-          const user = await User.findById(user_id);
-          const house = await House.findById(house_id);
-
-
-          if(String(user?._id) === String(house?.owner)) {
-                return res.status(401).json({ message:"Não é possível fazer reservas para casas que você é dono"});
-            
-             }
-
-            if(!house) {
-                return res.status(404).json({ message:"Casa não encontrada"});
+            const user = await User.findById(user_id);
+            const house = await House.findById(house_id);
+    
+            if (!user) {
+                return res.status(404).json({ message: "Usuário não encontrado" });
             }
-
-
-            if(house.status !== true) {
-                return res.status(400).json({ message:"Casa não está disponível para reservas"});
+    
+            if (!house) {
+                return res.status(404).json({ message: "Casa não encontrada" });
             }
-
+    
+            if (String(user._id) === String(house.owner)) {
+                return res.status(401).json({ message: "Não é possível fazer reservas para casas que você é dono" });
+            }
+    
+            if (house.status !== true) {
+                return res.status(400).json({ message: "Casa não está disponível para reservas" });
+            }
+    
             const reserva = await Reserve.create({
-                owner: user_id as string,
-                house: house_id as string,
+                owner: user_id,
+                house: house_id,
                 date: new Date(),
                 hour: horaBrasilia,
             });
+        
 
-            const owner_id = await House.findById(house.owner);
-
-
-            const owner = await User.findById(owner_id);
-            const appointment = await (await reserva.populate('house')).populate('user')
-
+            const appointment = await reserva.populate('house');
+    
             res.status(201).json({
                 message: "Reserva realizada com sucesso",
                 appointment,
-                proprietario_do_imovel: owner
-            })
-
-
+            });
+            
         } catch (error) {
-             return res.status(400).json({ message: 'Houve um erro inesperado aí', error});
+            return res.status(400).json({ message: 'Houve um erro inesperado aí', error });
         }
-    
     }
+    
 
     static async ListarReservas (req: Request, res: Response): Promise<any> {
 
@@ -357,7 +353,6 @@ export default class Controller {
         } catch (error) {
             return res.status(400).json({ message: 'Houve um erro', error });
         }
-
 
 
     }
