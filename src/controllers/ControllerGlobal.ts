@@ -318,7 +318,7 @@ export default class Controller {
             }
 
             const reserva = await Reserve.create({
-                user: user_id as string,
+                owner: user_id as string,
                 house: house_id as string,
                 date: new Date(),
                 hour: horaBrasilia,
