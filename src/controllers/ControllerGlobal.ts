@@ -324,11 +324,16 @@ export default class Controller {
                 hour: horaBrasilia,
             });
 
+            const owner_id = await House.findById(house.owner);
+
+
+            const owner = await User.findById(owner_id);
             const appointment = await (await reserva.populate('house')).populate('user')
 
             res.status(201).json({
                 message: "Reserva realizada com sucesso",
-                appointment
+                appointment,
+                proprietario_do_imovel: owner
             })
 
 

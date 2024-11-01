@@ -7,7 +7,7 @@ const ReservaSchema = new Schema({
         required: true,
     },
 
-    user: {
+    owner: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
