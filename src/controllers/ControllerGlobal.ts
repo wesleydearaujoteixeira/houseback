@@ -113,7 +113,7 @@ export default class Controller {
         
        let fileimage = req.file?.filename;
 
-       const {description, price, location, status } = req.body;
+       const {description, price, location, status, telefone } = req.body;
        const { id } = req.params;
 
 
@@ -135,6 +135,11 @@ export default class Controller {
        
        if(!status) {
         return res.status(401).json({ message: 'Status é obrigatório'});
+       }
+
+       if(!telefone) {
+            return res.status(401).json({ message: 'Telefone é obrigatório'});
+
        }
        
        const user = await User.findOne({_id: id});
@@ -159,6 +164,7 @@ export default class Controller {
             description: description as string,
             price: price as number,
             location: location as string,
+            telefone: telefone,
             status: status as boolean,
 
         })
