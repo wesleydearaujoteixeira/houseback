@@ -349,7 +349,7 @@ export default class Controller {
         try {
 
             const { id } = req.params;
-            const houses = await Reserve.find({user: id}).populate('house');
+            const houses = await Reserve.find({owner: id}).populate('house');
 
             return res.status(200).json({
                 message: "Listando reservas do usuário",
