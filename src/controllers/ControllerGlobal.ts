@@ -375,7 +375,6 @@ export default class Controller {
                 return res.status(401).json({ message: "Token não fornecido"});
             }
 
-
             const cancelReserve = await Reserve.findByIdAndDelete({_id: reserve_id});
 
             if(!cancelReserve) {
