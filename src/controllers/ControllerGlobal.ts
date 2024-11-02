@@ -368,8 +368,7 @@ export default class Controller {
     
         try {
             
-            const { reserve_id } = req.params;
-            const { user_id } = req.headers;
+            const { reserve_id, user_id} = req.params;
 
 
             if(user_id === undefined || user_id === "") {
