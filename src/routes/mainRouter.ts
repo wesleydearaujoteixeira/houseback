@@ -33,6 +33,6 @@ mainRouter.delete('/reservas/:reserve_id/:user_id', VerificationService.getVerif
 mainRouter.patch('/editarPerfil/:user_id', VerificationService.getVerification, upload.single('images'), Controller.ProfileUser);
 mainRouter.get('/myhomes/:id', VerificationService.getVerification, Controller.MyHomes);
 
-
+mainRouter.get('/perfildata/:user_id', VerificationService.getVerification, Controller.ProfileData);
 
 export default mainRouter;

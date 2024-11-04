@@ -22,7 +22,6 @@ const ProfileSchema = new Schema({
 );
 
 
-
 ProfileSchema.virtual('images_url').get( function(){
     return `https://houseback-api.onrender.com/files/${this.images}`;
 })

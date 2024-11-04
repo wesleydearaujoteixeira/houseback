@@ -444,6 +444,21 @@ export default class Controller {
        }
     }
 
+
+    static async ProfileData (req: Request, res: Response): Promise<any> {
+        
+        const { user_id } = req.params;
+
+        const profile = await Profile.findById({_id: user_id});
+
+        if(!profile) {
+            return res.status(404).json({ message: "Perfil não encontrado"});
+        }
+
+        return res.status(200).json({ message: "Obtendo dados do perfil", profile});
+
+    }
+
  
 
 
