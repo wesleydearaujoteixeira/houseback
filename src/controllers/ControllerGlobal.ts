@@ -401,7 +401,7 @@ export default class Controller {
         
         let fileimage = req.file?.filename;
 
-       const { description, telefone } = req.body;
+       const { description, telefone, name} = req.body;
        const { user_id } = req.params;
 
        try {
@@ -409,6 +409,7 @@ export default class Controller {
         const perfil = await Profile.create({
             owner: user_id as string,
             images: fileimage,
+            name,
             description: description as string,
             telefone: telefone as string
 
