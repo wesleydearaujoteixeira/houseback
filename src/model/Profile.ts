@@ -9,6 +9,22 @@ const ProfileSchema = new Schema({
         ref: 'User',
         required: true,
     }
-});
+},
+
+{
+
+    toJSON: {
+        virtuals: true
+    }
+
+}
+
+);
+
+
+
+ProfileSchema.virtual('images_url').get( function(){
+    return `https://houseback-api.onrender.com/files/${this.images}`;
+})
 
 export default model('Profile', ProfileSchema);
