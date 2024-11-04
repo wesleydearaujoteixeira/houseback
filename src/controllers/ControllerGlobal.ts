@@ -449,7 +449,7 @@ export default class Controller {
         
         const { user_id } = req.params;
 
-        const profile = await Profile.findById({_id: user_id});
+        const profile = await Profile.find({_id: user_id});
 
         if(!profile) {
             return res.status(404).json({ message: "Perfil não encontrado"});
