@@ -409,7 +409,7 @@ export default class Controller {
         const perfil = await Profile.create({
             owner: user_id as string,
             images: fileimage,
-            name,
+            name: name as string,
             description: description as string,
             telefone: telefone as string
 
