@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 
 const ProfileSchema = new Schema({
     images: { type: String, required: true },
+    name: { type: String, required: true},
     description: { type: String, required: true},
     telefone: { type: String, required: true},
     owner: {
